@@ -1,0 +1,31 @@
+name: Snyk Scan
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16' # or the version you need
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Install Snyk CLI
+      run: npm install -g snyk
+
+    - name: Run Snyk to check for vulnerabilities
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      run: snyk test --all-projects
